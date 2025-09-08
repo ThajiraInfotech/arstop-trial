@@ -192,81 +192,19 @@ const ProductListing = () => {
           <div className="flex-1">
             {paginatedProducts.length > 0 ? (
               <>
-                <div className={viewMode === 'grid' 
-                  ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" 
-                  : "space-y-6"
-                }>
-                  {paginatedProducts.map((product) => (
-                    <Card key={product.id} className="bg-white border-0 shadow-lg overflow-hidden group hover:shadow-xl transition-all duration-300">
-                      <CardContent className="p-0">
-                        <div className="relative">
-                          <Link to={`/product/${product.id}`}>
-                            <div className={`relative overflow-hidden ${viewMode === 'grid' ? 'h-64' : 'h-48 w-48 float-left mr-6'}`}>
-                              <img 
-                                src={product.images[0]}
-                                alt={product.name}
-                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                              />
-                              {product.oldPrice && (
-                                <span className="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-sm font-medium">
-                                  SALE
-                                </span>
-                              )}
-                            </div>
-                          </Link>
-                          
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-4 right-4 bg-white/80 hover:bg-white"
-                            onClick={() => addToWishlist(product.id)}
-                          >
-                            <Heart className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        
-                        <div className="p-6">
-                          <Link to={`/product/${product.id}`}>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2 hover:text-amber-600 transition-colors line-clamp-2">
-                              {product.name}
-                            </h3>
-                          </Link>
-                          
-                          <div className="flex items-center space-x-2 mb-3">
-                            <div className="flex items-center">
-                              {[...Array(5)].map((_, i) => (
-                                <Star 
-                                  key={i} 
-                                  className={`h-4 w-4 ${i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
-                                />
-                              ))}
-                            </div>
-                            <span className="text-sm text-gray-500">({product.reviewCount})</span>
-                          </div>
-                          
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-2">
-                              <span className="text-xl font-bold text-gray-900">
-                                Rs. {product.price.toLocaleString()}
-                              </span>
-                              {product.oldPrice && (
-                                <span className="text-sm text-gray-500 line-through">
-                                  Rs. {product.oldPrice.toLocaleString()}
-                                </span>
-                              )}
-                            </div>
-                            
-                            <Link to={`/product/${product.id}`}>
-                              <Button size="sm" className="bg-black text-white hover:bg-gray-800">
-                                View Details
-                              </Button>
-                            </Link>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                <motion.div 
+                  className={viewMode === 'grid' 
+                    ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" 
+                    : "space-y-6"
+                  }
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.6 }}
+                >
+                  {paginatedProducts.map((product, index) => (
+                    <ProductCard key={product.id} product={product} index={index} />
                   ))}
-                </div>
+                </motion.div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
