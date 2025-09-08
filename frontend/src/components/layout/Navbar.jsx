@@ -1,23 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, Menu, X, User, Package, Heart, LogOut, Settings } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import SearchSuggestions from '../SearchSuggestions';
 import { getCartItems, getWishlistItems } from '../../data/mock';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(0);
-  const [wishlistCount, setWishlistCount] = useState(0);
+  const [wishlistItems, setWishlistItems] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // Mock auth state
   const navigate = useNavigate();
+  const searchRef = useRef(null);
 
   useEffect(() => {
     // Initial count
     setCartCount(getCartItems().length);
-    setWishlistCount(getWishlistItems().length);
+    setWishlistItems(getWishlistItems());
+
+    // Check if user is logged in (from localStorage)
+    const user = localStorage.getItem('artstop_user');
+    setIsLoggedIn(!!user);
 
     // Listen for cart updates
     const handleCartUpdate = () => {
@@ -25,16 +34,34 @@ const Navbar = () => {
     };
 
     const handleWishlistUpdate = () => {
-      setWishlistCount(getWishlistItems().length);
+      setWishlistItems(getWishlistItems());
+    };
+
+    const handleAuthUpdate = () => {
+      const user = localStorage.getItem('artstop_user');
+      setIsLoggedIn(!!user);
     };
 
     window.addEventListener('cartUpdated', handleCartUpdate);
     window.addEventListener('wishlistUpdated', handleWishlistUpdate);
+    window.addEventListener('authUpdated', handleAuthUpdate);
 
     return () => {
       window.removeEventListener('cartUpdated', handleCartUpdate);
       window.removeEventListener('wishlistUpdated', handleWishlistUpdate);
+      window.removeEventListener('authUpdated', handleAuthUpdate);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setIsSearchFocused(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleSearch = (e) => {
@@ -42,6 +69,27 @@ const Navbar = () => {
     if (searchQuery.trim()) {
       navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchQuery('');
+      setIsSearchFocused(false);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchQuery(suggestion);
+    navigate(`/products?search=${encodeURIComponent(suggestion)}`);
+    setIsSearchFocused(false);
+  };
+
+  const handleUserAction = (action) => {
+    setIsUserMenuOpen(false);
+    if (!isLoggedIn && (action === '/profile' || action === '/orders' || action === '/settings')) {
+      navigate('/login');
+    } else if (action === '/logout') {
+      localStorage.removeItem('artstop_user');
+      setIsLoggedIn(false);
+      window.dispatchEvent(new CustomEvent('authUpdated'));
+      navigate('/');
+    } else {
+      navigate(action);
     }
   };
 
@@ -57,9 +105,13 @@ const Navbar = () => {
   const userMenuItems = [
     { name: 'My Profile', icon: User, path: '/profile' },
     { name: 'My Orders', icon: Package, path: '/orders' },
-    { name: 'My Wishlist', icon: Heart, path: '/wishlist' },
     { name: 'Settings', icon: Settings, path: '/settings' },
     { name: 'Logout', icon: LogOut, path: '/logout' }
+  ];
+
+  const authMenuItems = [
+    { name: 'Login', icon: User, path: '/login' },
+    { name: 'Sign Up', icon: User, path: '/signup' }
   ];
 
   return (
@@ -105,21 +157,121 @@ const Navbar = () => {
           </div>
 
           {/* Search Bar */}
-          <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-8 relative" ref={searchRef}>
             <form onSubmit={handleSearch} className="w-full relative">
               <Input
                 type="text"
                 placeholder="Search for products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
                 className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-amber-500 focus:ring-amber-500 transition-colors duration-200"
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             </form>
+            
+            <AnimatePresence>
+              {isSearchFocused && (
+                <SearchSuggestions
+                  query={searchQuery}
+                  onSuggestionClick={handleSuggestionClick}
+                  onClose={() => setIsSearchFocused(false)}
+                />
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Action Buttons */}
           <div className="flex items-center space-x-4">
+            {/* Wishlist Button */}
+            <div className="relative">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsWishlistOpen(!isWishlistOpen)}
+                className="relative p-2 text-gray-700 hover:text-amber-600 transition-colors duration-200"
+              >
+                <Heart className="h-5 w-5" />
+                <AnimatePresence>
+                  {wishlistItems.length > 0 && (
+                    <motion.span
+                      initial={{ scale: 0, opacity: 0 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute -top-2 -right-2 bg-amber-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium"
+                    >
+                      {wishlistItems.length}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </motion.button>
+
+              <AnimatePresence>
+                {isWishlistOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border z-50 max-h-96 overflow-hidden"
+                  >
+                    <div className="p-4 border-b">
+                      <h3 className="font-semibold text-gray-900">My Wishlist</h3>
+                      <p className="text-sm text-gray-500">{wishlistItems.length} items</p>
+                    </div>
+                    
+                    {wishlistItems.length === 0 ? (
+                      <div className="p-6 text-center">
+                        <Heart className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                        <p className="text-gray-500">No items in wishlist</p>
+                      </div>
+                    ) : (
+                      <div className="max-h-64 overflow-y-auto">
+                        {wishlistItems.map((item, index) => (
+                          <motion.div
+                            key={item.id}
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.2, delay: index * 0.05 }}
+                            className="p-3 hover:bg-gray-50 border-b last:border-b-0"
+                          >
+                            <Link
+                              to={`/product/${item.id}`}
+                              onClick={() => setIsWishlistOpen(false)}
+                              className="flex items-center space-x-3"
+                            >
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="w-12 h-12 object-cover rounded-lg"
+                              />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  {item.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  Rs. {item.price.toLocaleString()}
+                                </p>
+                              </div>
+                            </Link>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                    
+                    <div className="p-3 border-t bg-gray-50">
+                      <Link to="/wishlist" onClick={() => setIsWishlistOpen(false)}>
+                        <Button variant="outline" size="sm" className="w-full">
+                          View All Wishlist
+                        </Button>
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* User Dropdown */}
             <div className="relative">
               <motion.button
@@ -140,26 +292,20 @@ const Navbar = () => {
                     transition={{ duration: 0.2 }}
                     className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-2 z-50"
                   >
-                    {userMenuItems.map((item, index) => (
+                    {(isLoggedIn ? userMenuItems : authMenuItems).map((item, index) => (
                       <motion.div
                         key={item.name}
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.2, delay: index * 0.05 }}
                       >
-                        <Link
-                          to={item.path}
-                          onClick={() => setIsUserMenuOpen(false)}
-                          className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors duration-200"
+                        <button
+                          onClick={() => handleUserAction(item.path)}
+                          className="flex items-center space-x-3 px-4 py-2 text-gray-700 hover:bg-amber-50 hover:text-amber-600 transition-colors duration-200 w-full text-left"
                         >
                           <item.icon className="h-4 w-4" />
                           <span className="text-sm font-medium">{item.name}</span>
-                          {item.name === 'My Wishlist' && wishlistCount > 0 && (
-                            <span className="ml-auto bg-amber-600 text-white text-xs rounded-full px-2 py-1">
-                              {wishlistCount}
-                            </span>
-                          )}
-                        </Link>
+                        </button>
                       </motion.div>
                     ))}
                   </motion.div>

@@ -82,15 +82,15 @@ const Home = () => {
             variants={containerVariants}
             initial="hidden"
             animate="visible"
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-full"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full"
           >
-            {/* Main Hero Card */}
+            {/* Main Hero Card - spans 7 columns */}
             <motion.div 
               variants={itemVariants}
-              className="lg:col-span-2"
+              className="lg:col-span-7"
             >
               <Card className="h-full bg-gradient-to-br from-amber-50 to-orange-100 border-0 shadow-2xl overflow-hidden group hover:shadow-3xl transition-all duration-500">
-                <CardContent className="p-0 h-full relative">
+                <CardContent className="p-0 h-full relative min-h-[500px]">
                   <motion.div 
                     className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent z-10"
                     whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.5), transparent)" }}
@@ -161,13 +161,14 @@ const Home = () => {
               </Card>
             </motion.div>
 
-            {/* Side Cards */}
+            {/* Side Cards - spans 5 columns, arranged in 2x2 grid */}
             <motion.div 
               variants={itemVariants}
-              className="space-y-4"
+              className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
             >
+              {/* Top Left Card */}
               <motion.div animate={floatingAnimation}>
-                <Card className="h-64 bg-gradient-to-br from-blue-50 to-indigo-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                <Card className="h-48 bg-gradient-to-br from-blue-50 to-indigo-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
                   <CardContent className="p-0 h-full relative">
                     <motion.div 
                       className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
@@ -181,12 +182,12 @@ const Home = () => {
                       transition={{ duration: 0.6 }}
                     />
                     <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-6"
+                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
                       whileHover={{ y: -5 }}
                       transition={{ duration: 0.3 }}
                     >
                       <motion.h3 
-                        className="text-2xl font-bold text-white mb-2"
+                        className="text-lg font-bold text-white mb-1"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
@@ -200,10 +201,11 @@ const Home = () => {
                 </Card>
               </motion.div>
 
+              {/* Top Right Card */}
               <motion.div 
                 animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 0.5 } }}
               >
-                <Card className="h-64 bg-gradient-to-br from-rose-50 to-pink-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                <Card className="h-48 bg-gradient-to-br from-rose-50 to-pink-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
                   <CardContent className="p-0 h-full relative">
                     <motion.div 
                       className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
@@ -217,12 +219,12 @@ const Home = () => {
                       transition={{ duration: 0.6 }}
                     />
                     <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-6"
+                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
                       whileHover={{ y: -5 }}
                       transition={{ duration: 0.3 }}
                     >
                       <motion.h3 
-                        className="text-2xl font-bold text-white mb-2"
+                        className="text-lg font-bold text-white mb-1"
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
@@ -230,6 +232,80 @@ const Home = () => {
                         Traditional
                         <br />
                         Crafts
+                      </motion.h3>
+                    </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Bottom Left Card */}
+              <motion.div 
+                animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
+              >
+                <Card className="h-48 bg-gradient-to-br from-green-50 to-emerald-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                  <CardContent className="p-0 h-full relative">
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
+                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
+                    />
+                    <motion.img 
+                      src="https://images.unsplash.com/photo-1615874694520-474822394e73?crop=entropy&cs=srgb&fm=jpg&w=400&h=300&fit=crop"
+                      alt="Elegant Decor"
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <motion.div 
+                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.h3 
+                        className="text-lg font-bold text-white mb-1"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                      >
+                        Elegant
+                        <br />
+                        Decor
+                      </motion.h3>
+                    </motion.div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Bottom Right Card */}
+              <motion.div 
+                animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1.5 } }}
+              >
+                <Card className="h-48 bg-gradient-to-br from-purple-50 to-violet-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
+                  <CardContent className="p-0 h-full relative">
+                    <motion.div 
+                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
+                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
+                    />
+                    <motion.img 
+                      src="https://images.pexels.com/photos/1099816/pexels-photo-1099816.jpeg?w=400&h=300&fit=crop"
+                      alt="Custom Art"
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.1 }}
+                      transition={{ duration: 0.6 }}
+                    />
+                    <motion.div 
+                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
+                      whileHover={{ y: -5 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <motion.h3 
+                        className="text-lg font-bold text-white mb-1"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.6 }}
+                      >
+                        Custom
+                        <br />
+                        Art
                       </motion.h3>
                     </motion.div>
                   </CardContent>
