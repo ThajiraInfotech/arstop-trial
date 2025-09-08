@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
-import { Filter, Grid, List, Star, Heart } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Filter, Grid, List } from 'lucide-react';
 import { Card, CardContent } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../components/ui/select';
+import ProductCard from '../components/ProductCard';
 import { products, categories } from '../data/mock';
 
 const ProductListing = () => {
