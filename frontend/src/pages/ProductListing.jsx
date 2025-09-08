@@ -78,11 +78,6 @@ const ProductListing = () => {
 
   const categoryInfo = category ? categories.find(cat => cat.slug === category) : null;
 
-  const addToWishlist = (productId) => {
-    // Mock wishlist functionality
-    console.log('Added to wishlist:', productId);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
