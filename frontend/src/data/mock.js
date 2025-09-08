@@ -129,7 +129,8 @@ export const products = [
     rating: 4.8,
     reviewCount: 92,
     images: [
-      "https://images.unsplash.com/photo-1558114965-eeb97aa84c3b?crop=entropy&cs=srgb&fm=jpg&w=800"
+      "https://images.unsplash.com/photo-1558114965-eeb97aa84c3b?crop=entropy&cs=srgb&fm=jpg&w=800",
+      "https://images.unsplash.com/photo-1573765727997-e02883182ba7?crop=entropy&cs=srgb&fm=jpg&w=800"
     ],
     variants: [
       { name: "Wood", value: "wood", price: 5500 },
@@ -236,6 +237,62 @@ export const testimonials = [
   }
 ];
 
+// Mock Orders Data
+export const mockOrders = [
+  {
+    id: "ORD-001",
+    date: "2025-01-15",
+    status: "delivered",
+    total: 12500,
+    items: [
+      {
+        id: 1,
+        name: "17 Ayatul Kursi Stainless Steel Islamic Wall Art",
+        price: 8000,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1558114965-eeb97aa84c3b?crop=entropy&cs=srgb&fm=jpg&w=200"
+      },
+      {
+        id: 4,
+        name: "Handcrafted Islamic Lantern Set",
+        price: 3200,
+        quantity: 1,
+        image: "https://images.pexels.com/photos/2233416/pexels-photo-2233416.jpeg?w=200"
+      }
+    ]
+  },
+  {
+    id: "ORD-002",
+    date: "2025-01-12",
+    status: "processing",
+    total: 7000,
+    items: [
+      {
+        id: 2,
+        name: "69 Asma ul Husna Acrylic Islamic Wall Art",
+        price: 7000,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1573765727997-e02883182ba7?crop=entropy&cs=srgb&fm=jpg&w=200"
+      }
+    ]
+  },
+  {
+    id: "ORD-003",
+    date: "2025-01-08",
+    status: "shipped",
+    total: 4500,
+    items: [
+      {
+        id: 3,
+        name: "Modern Islamic Geometric Pattern Canvas",
+        price: 4500,
+        quantity: 1,
+        image: "https://images.unsplash.com/photo-1615874694520-474822394e73?crop=entropy&cs=srgb&fm=jpg&w=200"
+      }
+    ]
+  }
+];
+
 // Cart mock data (will be stored in localStorage)
 export const getCartItems = () => {
   const stored = localStorage.getItem('artstop_cart');
@@ -244,6 +301,8 @@ export const getCartItems = () => {
 
 export const saveCartItems = (items) => {
   localStorage.setItem('artstop_cart', JSON.stringify(items));
+  // Trigger a custom event to update cart count immediately
+  window.dispatchEvent(new CustomEvent('cartUpdated'));
 };
 
 // Wishlist mock data (will be stored in localStorage)
@@ -254,4 +313,16 @@ export const getWishlistItems = () => {
 
 export const saveWishlistItems = (items) => {
   localStorage.setItem('artstop_wishlist', JSON.stringify(items));
+  // Trigger a custom event to update wishlist count
+  window.dispatchEvent(new CustomEvent('wishlistUpdated'));
+};
+
+// Orders mock data (will be stored in localStorage)
+export const getOrders = () => {
+  const stored = localStorage.getItem('artstop_orders');
+  return stored ? JSON.parse(stored) : mockOrders;
+};
+
+export const saveOrders = (orders) => {
+  localStorage.setItem('artstop_orders', JSON.stringify(orders));
 };
