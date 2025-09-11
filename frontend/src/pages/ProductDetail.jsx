@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw } from 'lucide-react';
+import { Star, Heart, ShoppingCart, Truck, Shield, RotateCcw, Upload, X } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
 import { Badge } from '../components/ui/badge';
+import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
 import { products, reviews, getCartItems, saveCartItems, getWishlistItems, saveWishlistItems } from '../data/mock';
 import { useToast } from '../hooks/use-toast';
 
@@ -18,9 +20,18 @@ const ProductDetail = () => {
   const [selectedColor, setSelectedColor] = useState(product?.colors?.[0] || '');
   const [quantity, setQuantity] = useState(1);
 
+  // Review form state
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewTitle, setReviewTitle] = useState('');
+  const [reviewContent, setReviewContent] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [reviewMedia, setReviewMedia] = useState([]);
+
   if (!product) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center ">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h2>
           <Link to="/products">
@@ -92,6 +103,74 @@ const ProductDetail = () => {
   const isInWishlist = getWishlistItems().some(item => item.id === product.id);
   const productReviews = reviews.filter(review => review.productId === product.id);
 
+  // Review form handlers
+  const handleFileUpload = (event) => {
+    const files = Array.from(event.target.files);
+    const newMedia = files.map(file => ({
+      file,
+      url: URL.createObjectURL(file),
+      type: file.type.startsWith('image/') ? 'image' : 'video'
+    }));
+    setReviewMedia([...reviewMedia, ...newMedia]);
+  };
+
+  const removeMedia = (index) => {
+    const newMedia = [...reviewMedia];
+    URL.revokeObjectURL(newMedia[index].url);
+    newMedia.splice(index, 1);
+    setReviewMedia(newMedia);
+  };
+
+  const submitReview = () => {
+    if (!reviewRating || !reviewTitle.trim() || !reviewContent.trim() || !displayName.trim() || !email.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // In a real app, this would send to backend
+    const newReview = {
+      id: Date.now(),
+      productId: product.id,
+      userName: displayName,
+      rating: reviewRating,
+      comment: reviewContent,
+      title: reviewTitle,
+      date: new Date().toISOString().split('T')[0],
+      verified: false,
+      media: reviewMedia
+    };
+
+    // Reset form
+    setReviewRating(0);
+    setReviewTitle('');
+    setReviewContent('');
+    setDisplayName('');
+    setEmail('');
+    setReviewMedia([]);
+    setShowReviewForm(false);
+
+    toast({
+      title: "Review Submitted",
+      description: "Thank you for your review! It will be published after moderation.",
+    });
+  };
+
+  const cancelReview = () => {
+    // Clean up object URLs
+    reviewMedia.forEach(media => URL.revokeObjectURL(media.url));
+    setReviewRating(0);
+    setReviewTitle('');
+    setReviewContent('');
+    setDisplayName('');
+    setEmail('');
+    setReviewMedia([]);
+    setShowReviewForm(false);
+  };
+
   // Calculate rating distribution
   const ratingDistribution = [5, 4, 3, 2, 1].map(rating => {
     const count = productReviews.filter(review => review.rating === rating).length;
@@ -100,7 +179,7 @@ const ProductDetail = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
@@ -131,7 +210,7 @@ const ProductDetail = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
-                      selectedImage === index ? 'border-amber-600' : 'border-gray-200 hover:border-gray-300'
+                      selectedImage === index ? 'border-blue-600' : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <img 
@@ -278,12 +357,12 @@ const ProductDetail = () => {
             </div>
 
             {/* Customize CTA */}
-            <Card className="bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
+            <Card className="bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200">
               <CardContent className="p-6 text-center">
                 <h3 className="text-lg font-semibold mb-2">Want Something Custom?</h3>
                 <p className="text-gray-600 mb-4">Let us create a personalized version just for you</p>
                 <Link to="/customize">
-                  <Button variant="outline" className="border-amber-600 text-amber-600 hover:bg-amber-600 hover:text-white">
+                  <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white">
                     Customize This Product
                   </Button>
                 </Link>
@@ -311,7 +390,7 @@ const ProductDetail = () => {
                   <ul className="space-y-2">
                     {product.features.map((feature, index) => (
                       <li key={index} className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-amber-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                         <span className="text-gray-700">{feature}</span>
                       </li>
                     ))}
@@ -358,6 +437,189 @@ const ProductDetail = () => {
 
                 {/* Reviews List */}
                 <div className="lg:col-span-2 space-y-6">
+                  {/* Write a Review Button */}
+                  {!showReviewForm && (
+                    <Card className="border-dashed border-2">
+                      <CardContent className="p-6 text-center">
+                        <h3 className="text-lg font-semibold mb-2">Share Your Experience</h3>
+                        <p className="text-gray-600 mb-4">Help others by writing a review for this product</p>
+                        <Button onClick={() => setShowReviewForm(true)} className="bg-black text-white hover:bg-gray-800">
+                          Write a Review
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Review Form */}
+                  {showReviewForm && (
+                    <Card>
+                      <CardContent className="p-6">
+                        <h3 className="text-xl font-semibold mb-6">Write a Review</h3>
+
+                        {/* Rating */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Rating *</label>
+                          <div className="flex space-x-1">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <button
+                                key={star}
+                                type="button"
+                                onClick={() => setReviewRating(star)}
+                                className="focus:outline-none"
+                              >
+                                <Star
+                                  className={`h-8 w-8 ${
+                                    star <= reviewRating
+                                      ? 'text-yellow-400 fill-current'
+                                      : 'text-gray-300 hover:text-yellow-400'
+                                  }`}
+                                />
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Review Title */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Review Title *
+                          </label>
+                          <p className="text-sm text-gray-500 mb-2">Give your review a title</p>
+                          <Input
+                            value={reviewTitle}
+                            onChange={(e) => setReviewTitle(e.target.value)}
+                            placeholder="Summarize your experience"
+                            maxLength={100}
+                          />
+                        </div>
+
+                        {/* Review Content */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Review Content *
+                          </label>
+                          <p className="text-sm text-gray-500 mb-2">Start writing here...</p>
+                          <Textarea
+                            value={reviewContent}
+                            onChange={(e) => setReviewContent(e.target.value)}
+                            placeholder="Share details of your experience with this product"
+                            rows={6}
+                            maxLength={1000}
+                          />
+                          <div className="text-right text-sm text-gray-500 mt-1">
+                            {reviewContent.length}/1000
+                          </div>
+                        </div>
+
+                        {/* Media Upload */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Picture/Video (optional)
+                          </label>
+                          <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                            <input
+                              type="file"
+                              multiple
+                              accept="image/*,video/*"
+                              onChange={handleFileUpload}
+                              className="hidden"
+                              id="media-upload"
+                            />
+                            <label htmlFor="media-upload" className="cursor-pointer">
+                              <div className="text-center">
+                                <Upload className="h-8 w-8 mx-auto mb-2 text-gray-400" />
+                                <p className="text-sm text-gray-600">Click to upload or drag and drop</p>
+                                <p className="text-xs text-gray-500">PNG, JPG, GIF, MP4 up to 10MB each</p>
+                              </div>
+                            </label>
+                          </div>
+
+                          {/* Media Preview */}
+                          {reviewMedia.length > 0 && (
+                            <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-4">
+                              {reviewMedia.map((media, index) => (
+                                <div key={index} className="relative">
+                                  {media.type === 'image' ? (
+                                    <img
+                                      src={media.url}
+                                      alt={`Upload ${index + 1}`}
+                                      className="w-full h-24 object-cover rounded-lg"
+                                    />
+                                  ) : (
+                                    <video
+                                      src={media.url}
+                                      className="w-full h-24 object-cover rounded-lg"
+                                      controls
+                                    />
+                                  )}
+                                  <button
+                                    type="button"
+                                    onClick={() => removeMedia(index)}
+                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                                  >
+                                    <X className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Display Name */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Display Name *
+                          </label>
+                          <p className="text-sm text-gray-500 mb-2">Displayed publicly like "John Smith"</p>
+                          <Input
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                            placeholder="Your display name"
+                          />
+                        </div>
+
+                        {/* Email */}
+                        <div className="mb-6">
+                          <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address *
+                          </label>
+                          <p className="text-sm text-gray-500 mb-2">Your email address</p>
+                          <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="your.email@example.com"
+                          />
+                        </div>
+
+                        {/* Terms */}
+                        <div className="mb-6">
+                          <p className="text-sm text-gray-600">
+                            How we use your data: We'll only contact you about the review you left, and only if necessary. By submitting your review, you agree to Judge.me's terms, privacy and content policies.
+                          </p>
+                        </div>
+
+                        {/* Buttons */}
+                        <div className="flex space-x-4">
+                          <Button
+                            onClick={cancelReview}
+                            variant="outline"
+                            className="flex-1"
+                          >
+                            Cancel Review
+                          </Button>
+                          <Button
+                            onClick={submitReview}
+                            className="flex-1 bg-black text-white hover:bg-gray-800"
+                          >
+                            Submit Review
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Existing Reviews */}
                   {productReviews.map((review) => (
                     <Card key={review.id}>
                       <CardContent className="p-6">
@@ -367,9 +629,9 @@ const ProductDetail = () => {
                             <div className="flex items-center space-x-2 mt-1">
                               <div className="flex">
                                 {[...Array(5)].map((_, i) => (
-                                  <Star 
-                                    key={i} 
-                                    className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} 
+                                  <Star
+                                    key={i}
+                                    className={`h-4 w-4 ${i < review.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`}
                                   />
                                 ))}
                               </div>

@@ -74,7 +74,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="flex items-center space-x-2 text-sm text-gray-500 mb-8">
@@ -104,7 +104,7 @@ const Cart = () => {
                     {/* Product Details */}
                     <div className="flex-1 min-w-0">
                       <Link to={`/product/${item.id}`}>
-                        <h3 className="text-lg font-semibold text-gray-900 hover:text-amber-600 transition-colors line-clamp-2">
+                        <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 transition-colors line-clamp-2">
                           {item.name}
                         </h3>
                       </Link>

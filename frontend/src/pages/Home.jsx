@@ -57,273 +57,105 @@ const Home = () => {
   return (
     <div className="min-h-screen overflow-hidden">
       {/* Hero Section */}
-      <motion.section 
-        style={{ y: heroY, opacity: heroOpacity }}
-        className="relative bg-gradient-to-br from-gray-100 to-gray-200 py-16 lg:py-24 overflow-hidden"
+<motion.section 
+  className="relative bg-white py-10 lg:py-16"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ duration: 0.8 }}
+>
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    {/* Grid Layout */}
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      {/* Main Hero Left */}
+      <motion.div 
+        className="lg:col-span-7 relative rounded-2xl overflow-hidden"
+        whileHover={{ scale: 1.01 }}
       >
-        {/* Animated Background Elements */}
-        <motion.div
-          className="absolute inset-0 opacity-5"
-          animate={{
-            backgroundPosition: [
-              `${mousePosition.x * 0.02}px ${mousePosition.y * 0.02}px`,
-              `${mousePosition.x * 0.02 + 10}px ${mousePosition.y * 0.02 + 10}px`
-            ]
-          }}
-          transition={{ duration: 2, ease: "easeOut" }}
-          style={{
-            backgroundImage: "url('data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')",
-            backgroundSize: "60px 60px"
-          }}
+        <img 
+          src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd47?auto=format&fit=crop&w=1200&q=80"
+          alt="Summer Outfit"
+          className="w-full h-[500px] object-cover rounded-2xl"
         />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div 
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full"
-          >
-            {/* Main Hero Card - spans 7 columns */}
-            <motion.div 
-              variants={itemVariants}
-              className="lg:col-span-7"
-            >
-              <Card className="h-full bg-gradient-to-br from-amber-50 to-orange-100 border-0 shadow-2xl overflow-hidden group hover:shadow-3xl transition-all duration-500">
-                <CardContent className="p-0 h-full relative min-h-[500px]">
-                  <motion.div 
-                    className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent z-10"
-                    whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.5), transparent)" }}
-                    transition={{ duration: 0.3 }}
-                  />
-                  <motion.img 
-                    src="https://images.unsplash.com/photo-1558114965-eeb97aa84c3b?crop=entropy&cs=srgb&fm=jpg&w=800&h=600&fit=crop"
-                    alt="Islamic Art Collection"
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.7, ease: "easeOut" }}
-                  />
-                  <motion.div 
-                    className="absolute inset-0 z-20 flex flex-col justify-center p-8 lg:p-12"
-                    variants={itemVariants}
-                  >
-                    <motion.h1 
-                      className="text-4xl lg:text-6xl font-bold text-white mb-4 leading-tight"
-                      initial={{ opacity: 0, x: -50 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.8, delay: 0.5 }}
-                    >
-                      Color of
-                      <br />
-                      <motion.span
-                        className="bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent"
-                        animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"] }}
-                        transition={{ duration: 3, repeat: Infinity }}
-                      >
-                        Islamic
-                      </motion.span>
-                      <br />
-                      Heritage
-                    </motion.h1>
-                    <motion.p 
-                      className="text-lg text-white/90 mb-8 max-w-md"
-                      initial={{ opacity: 0, x: -30 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.8, delay: 0.7 }}
-                    >
-                      100+ Collections for your spiritual and artistic inspiration in this modern world
-                    </motion.p>
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.8, delay: 0.9 }}
-                    >
-                      <Link to="/categories">
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                        >
-                          <Button className="bg-black text-white hover:bg-gray-800 px-8 py-3 rounded-full text-lg font-medium transition-all duration-300 shadow-xl hover:shadow-2xl">
-                            VIEW COLLECTIONS
-                            <motion.div
-                              className="ml-2"
-                              animate={{ x: [0, 5, 0] }}
-                              transition={{ duration: 1.5, repeat: Infinity }}
-                            >
-                              <ArrowRight className="h-5 w-5" />
-                            </motion.div>
-                          </Button>
-                        </motion.div>
-                      </Link>
-                    </motion.div>
-                  </motion.div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* Side Cards - spans 5 columns, arranged in 2x2 grid */}
-            <motion.div 
-              variants={itemVariants}
-              className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4"
-            >
-              {/* Top Left Card */}
-              <motion.div animate={floatingAnimation}>
-                <Card className="h-48 bg-gradient-to-br from-blue-50 to-indigo-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
-                  <CardContent className="p-0 h-full relative">
-                    <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
-                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
-                    />
-                    <motion.img 
-                      src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?crop=entropy&cs=srgb&fm=jpg&w=400&h=300&fit=crop"
-                      alt="Modern Living"
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
-                      whileHover={{ y: -5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.h3 
-                        className="text-lg font-bold text-white mb-1"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                      >
-                        Modern
-                        <br />
-                        Living
-                      </motion.h3>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Top Right Card */}
-              <motion.div 
-                animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 0.5 } }}
-              >
-                <Card className="h-48 bg-gradient-to-br from-rose-50 to-pink-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
-                  <CardContent className="p-0 h-full relative">
-                    <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
-                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
-                    />
-                    <motion.img 
-                      src="https://images.pexels.com/photos/2233416/pexels-photo-2233416.jpeg?w=400&h=300&fit=crop"
-                      alt="Traditional Crafts"
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
-                      whileHover={{ y: -5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.h3 
-                        className="text-lg font-bold text-white mb-1"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
-                      >
-                        Traditional
-                        <br />
-                        Crafts
-                      </motion.h3>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Bottom Left Card */}
-              <motion.div 
-                animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1 } }}
-              >
-                <Card className="h-48 bg-gradient-to-br from-green-50 to-emerald-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
-                  <CardContent className="p-0 h-full relative">
-                    <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
-                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
-                    />
-                    <motion.img 
-                      src="https://images.unsplash.com/photo-1615874694520-474822394e73?crop=entropy&cs=srgb&fm=jpg&w=400&h=300&fit=crop"
-                      alt="Elegant Decor"
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
-                      whileHover={{ y: -5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.h3 
-                        className="text-lg font-bold text-white mb-1"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                      >
-                        Elegant
-                        <br />
-                        Decor
-                      </motion.h3>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-
-              {/* Bottom Right Card */}
-              <motion.div 
-                animate={{ ...floatingAnimation, transition: { ...floatingAnimation.transition, delay: 1.5 } }}
-              >
-                <Card className="h-48 bg-gradient-to-br from-purple-50 to-violet-100 border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
-                  <CardContent className="p-0 h-full relative">
-                    <motion.div 
-                      className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10"
-                      whileHover={{ background: "linear-gradient(to right, rgba(0,0,0,0.4), transparent)" }}
-                    />
-                    <motion.img 
-                      src="https://images.pexels.com/photos/1099816/pexels-photo-1099816.jpeg?w=400&h=300&fit=crop"
-                      alt="Custom Art"
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.1 }}
-                      transition={{ duration: 0.6 }}
-                    />
-                    <motion.div 
-                      className="absolute inset-0 z-20 flex flex-col justify-center p-4"
-                      whileHover={{ y: -5 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <motion.h3 
-                        className="text-lg font-bold text-white mb-1"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.6 }}
-                      >
-                        Custom
-                        <br />
-                        Art
-                      </motion.h3>
-                    </motion.div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </motion.div>
-          </motion.div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-end p-8">
+          <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
+            Color of Summer <br /> Outfit
+          </h1>
+          <p className="text-white/90 mt-3 max-w-md">
+            100+ Collections for your outfit inspirations this summer
+          </p>
+          <Link to="/categories" className="mt-6">
+            <Button className="bg-black text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-gray-900">
+              View Collections →
+            </Button>
+          </Link>
         </div>
+      </motion.div>
 
-        {/* Scroll Indicator */}
-        <motion.div
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <ChevronDown className="h-6 w-6 text-gray-600" />
-        </motion.div>
-      </motion.section>
+      {/* Right Side 2x2 Grid */}
+      <div className="lg:col-span-5 grid grid-cols-2 gap-4">
+        {[
+          { img: "https://images.unsplash.com/photo-1606813907291-96e88456d1d1?auto=format&fit=crop&w=600&q=80", title: "Outdoor Active" },
+          { img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&q=80", title: "Casual Comfort" },
+          { img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80", title: "Say it with Shirt" },
+          { img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80", title: "Funky never get old" }
+        ].map((card, i) => (
+          <motion.div 
+            key={i}
+            className="relative rounded-2xl overflow-hidden group"
+            whileHover={{ scale: 1.03 }}
+          >
+            <img 
+              src={card.img} 
+              alt={card.title}
+              className="w-full h-56 object-cover rounded-2xl"
+            />
+            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all flex items-end p-4">
+              <h3 className="text-white text-lg font-semibold">{card.title}</h3>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+
+    {/* Below Section - Inspirations */}
+    <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=800&q=80"
+          className="h-64 w-full object-cover"
+          alt="Casual Inspo" 
+        />
+        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+          <h3 className="text-white text-xl font-bold">Casual Inspirations</h3>
+          <p className="text-white/80 text-sm mt-2">Combinations to inspire your daily activity.</p>
+        </div>
+      </motion.div>
+      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80"
+          className="h-64 w-full object-cover"
+          alt="Say it with Shirt" 
+        />
+        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+          <h3 className="text-white text-xl font-bold">Say it with Shirt</h3>
+        </div>
+      </motion.div>
+      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+        <img 
+          src="https://images.unsplash.com/photo-1622445272235-2a5a48d55db6?auto=format&fit=crop&w=800&q=80"
+          className="h-64 w-full object-cover"
+          alt="Funky" 
+        />
+        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+          <h3 className="text-white text-xl font-bold">Funky never get old</h3>
+        </div>
+      </motion.div>
+    </div>
+  </div>
+</motion.section>
+
+
 
       {/* Categories Section */}
       <motion.section 
@@ -344,29 +176,7 @@ const Home = () => {
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Browse by Categories
             </h2>
-            <motion.div 
-              className="flex justify-center space-x-8"
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-            >
-              {['ALL', 'ISLAMIC ART', 'HOME DECOR', 'GIFTS'].map((filter, index) => (
-                <motion.span
-                  key={filter}
-                  variants={itemVariants}
-                  className={`px-6 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 ${
-                    index === 0 
-                      ? 'bg-black text-white' 
-                      : 'text-gray-500 hover:text-black hover:bg-gray-100'
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {filter}
-                </motion.span>
-              ))}
-            </motion.div>
+          
           </motion.div>
           
           <motion.div 
@@ -437,7 +247,7 @@ const Home = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <Button variant="outline" className="flex items-center space-x-2 hover:bg-amber-50 hover:border-amber-300 transition-all duration-300">
+                <Button variant="outline" className="flex items-center space-x-2 hover:bg-blue-50 hover:border-blue-300 transition-all duration-300">
                   <span>View All</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
