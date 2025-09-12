@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
-import { ArrowRight, Star, Play, ChevronDown } from 'lucide-react';
+import { ArrowRight, Star } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card, CardContent } from '../components/ui/card';
 import ProductCard from '../components/ProductCard';
-import { categories, products, instagramReels, testimonials } from '../data/mock';
+import { categories, products, instagramReels, testimonials, instagramProfileUrl } from '../data/mock';
 
 const Home = () => {
-  const featuredProducts = products.filter(product => product.featured).slice(0, 6);
+  const displayedProducts = products.slice(0, 6);
   const { scrollY } = useScroll();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -73,45 +73,45 @@ const Home = () => {
         whileHover={{ scale: 1.01 }}
       >
         <img 
-          src="https://images.unsplash.com/photo-1521335629791-ce4aec67dd47?auto=format&fit=crop&w=1200&q=80"
+          src="/homepage/mainpic.heic"
           alt="Summer Outfit"
           className="w-full h-[500px] object-cover rounded-2xl"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent flex flex-col justify-end p-8">
-          <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
-            Color of Summer <br /> Outfit
-          </h1>
-          <p className="text-white/90 mt-3 max-w-md">
-            100+ Collections for your outfit inspirations this summer
-          </p>
-          <Link to="/categories" className="mt-6">
-            <Button className="bg-black text-white px-6 py-3 rounded-full text-lg font-medium hover:bg-gray-900">
-              View Collections →
-            </Button>
-          </Link>
-        </div>
+       <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex flex-col justify-end p-8">
+  <h1 className="text-4xl lg:text-6xl font-extrabold text-white leading-tight drop-shadow-lg">
+    Welcome to ArtStop  </h1>
+  <p className="text-white/90 mt-3 max-w-xl text-lg">
+    Discover stunning collections, creative inspirations & trendy designs — all in one stop!
+  </p>
+  <Link to="/categories" className="mt-6">
+    <Button className="bg-blue-500 hover:bg-blue-600 text-black font-semibold px-8 py-3 rounded-full text-lg shadow-lg transition-transform hover:scale-105">
+      ✨ Explore Collections →
+    </Button>
+  </Link>
+</div>
+
       </motion.div>
 
       {/* Right Side 2x2 Grid */}
       <div className="lg:col-span-5 grid grid-cols-2 gap-4">
         {[
-          { img: "https://images.unsplash.com/photo-1606813907291-96e88456d1d1?auto=format&fit=crop&w=600&q=80", title: "Outdoor Active" },
-          { img: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=600&q=80", title: "Casual Comfort" },
-          { img: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=600&q=80", title: "Say it with Shirt" },
-          { img: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80", title: "Funky never get old" }
+          { img: "/homepage/islamicart.heic", title: "Islamic Art" },
+          { img: "/homepage/homedecor.heic", title: "Home Decor" },
+          { img: "/homepage/gifts.heic", title: "Gifts" },
+          { img: "/homepage/cutouts.heic", title: "Cutouts & Signage" }
         ].map((card, i) => (
-          <motion.div 
+          <motion.div
             key={i}
-            className="relative rounded-2xl overflow-hidden group"
+            className="relative rounded-2xl overflow-hidden group shadow-md ring-1 ring-black/5 aspect-[1/1] hover:shadow-lg transition-shadow"
             whileHover={{ scale: 1.03 }}
           >
-            <img 
-              src={card.img} 
+            <img
+              src={card.img}
               alt={card.title}
-              className="w-full h-56 object-cover rounded-2xl"
+              className="absolute inset-0 w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-all flex items-end p-4">
-              <h3 className="text-white text-lg font-semibold">{card.title}</h3>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-4">
+              <h3 className="text-white text-lg font-semibold drop-shadow-md">{card.title}</h3>
             </div>
           </motion.div>
         ))}
@@ -119,39 +119,54 @@ const Home = () => {
     </div>
 
     {/* Below Section - Inspirations */}
-    <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
-      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?auto=format&fit=crop&w=800&q=80"
-          className="h-64 w-full object-cover"
-          alt="Casual Inspo" 
-        />
-        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-          <h3 className="text-white text-xl font-bold">Casual Inspirations</h3>
-          <p className="text-white/80 text-sm mt-2">Combinations to inspire your daily activity.</p>
-        </div>
-      </motion.div>
-      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1603252109303-2751441dd157?auto=format&fit=crop&w=800&q=80"
-          className="h-64 w-full object-cover"
-          alt="Say it with Shirt" 
-        />
-        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-          <h3 className="text-white text-xl font-bold">Say it with Shirt</h3>
-        </div>
-      </motion.div>
-      <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1622445272235-2a5a48d55db6?auto=format&fit=crop&w=800&q=80"
-          className="h-64 w-full object-cover"
-          alt="Funky" 
-        />
-        <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-          <h3 className="text-white text-xl font-bold">Funky never get old</h3>
-        </div>
-      </motion.div>
+    {/* Below Section - More from ArtStop */}
+<div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+  {/* Customization */}
+  <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+    <img 
+      src="/homepage/customization.heic"
+      className="h-64 w-full object-cover"
+      alt="Customization" 
+    />
+    <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+      <h3 className="text-white text-xl font-bold">Customization</h3>
+      <p className="text-white/80 text-sm mt-2">
+        Design your own artwork with choice of material, colors & text.
+      </p>
     </div>
+  </motion.div>
+
+  {/* Workshops */}
+  <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+    <img 
+      src="/homepage/workshops.PNG"
+      className="h-64 w-full object-cover"
+      alt="Workshops" 
+    />
+    <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+      <h3 className="text-white text-xl font-bold">Workshops</h3>
+      <p className="text-white/80 text-sm mt-2">
+        Learn Resin Art, Themed Classes & Business Setup guidance.
+      </p>
+    </div>
+  </motion.div>
+
+  {/* Customer Creations / Gallery */}
+  <motion.div whileHover={{ y: -5 }} className="relative rounded-2xl overflow-hidden">
+    <img 
+      src="/homepage/customercreation.heic"
+      className="h-64 w-full object-cover"
+      alt="Customer Creations" 
+    />
+    <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
+      <h3 className="text-white text-xl font-bold">Customer Creations</h3>
+      <p className="text-white/80 text-sm mt-2">
+        Explore artworks made for our clients — real homes & stories.
+      </p>
+    </div>
+  </motion.div>
+</div>
+
   </div>
 </motion.section>
 
@@ -193,7 +208,7 @@ const Home = () => {
                 whileHover={{ y: -8 }}
                 transition={{ duration: 0.3 }}
               >
-                <Link to={`/categories/${category.slug}`}>
+                <Link to={`/categories/${category.slug}/collections`}>
                   <Card className="h-80 bg-white border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500">
                     <CardContent className="p-0 h-full relative">
                       <motion.img 
@@ -214,7 +229,7 @@ const Home = () => {
                         transition={{ duration: 0.3 }}
                       >
                         <h3 className="text-xl font-bold mb-1">{category.name}</h3>
-                        <p className="text-sm text-white/80">{category.productCount} products</p>
+                        <p className="text-sm text-white/80">{category.collections?.length || 0} collections</p>
                       </motion.div>
                     </CardContent>
                   </Card>
@@ -241,7 +256,7 @@ const Home = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Featured Products</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">Products</h2>
             <Link to="/products">
               <motion.div
                 whileHover={{ scale: 1.05 }}
@@ -256,7 +271,7 @@ const Home = () => {
           </motion.div>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredProducts.map((product, index) => (
+            {displayedProducts.map((product, index) => (
               <ProductCard key={product.id} product={product} index={index} />
             ))}
           </div>
@@ -285,6 +300,13 @@ const Home = () => {
             <p className="text-gray-600 max-w-2xl mx-auto">
               See our latest creations and customer showcases on Instagram
             </p>
+            <div className="mt-4">
+              <a href={instagramProfileUrl} target="_blank" rel="noopener noreferrer">
+                <Button size="sm" className="bg-pink-500 hover:bg-pink-600 text-white">
+                  Follow us on Instagram
+                </Button>
+              </a>
+            </div>
           </motion.div>
           
           <motion.div 
@@ -301,42 +323,34 @@ const Home = () => {
                 whileHover={{ y: -5, scale: 1.02 }}
                 transition={{ duration: 0.3 }}
               >
-                <Card className="bg-white border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer">
-                  <CardContent className="p-0 relative">
-                    <div className="aspect-[9/16] relative overflow-hidden">
-                      <motion.img 
-                        src={reel.thumbnail}
-                        alt={reel.title}
-                        className="w-full h-full object-cover"
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.6 }}
-                      />
-                      <motion.div 
-                        className="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                        whileHover={{ backgroundColor: "rgba(0,0,0,0.3)" }}
-                      >
+                <a href={reel.url} target="_blank" rel="noopener noreferrer">
+                  <Card className="bg-white border-0 shadow-lg overflow-hidden group hover:shadow-2xl transition-all duration-500 cursor-pointer">
+                    <CardContent className="p-0 relative">
+                      <div className="aspect-[9/16] relative overflow-hidden">
+                        <video
+                          src={encodeURI(reel.videoSrc)}
+                          className="w-full h-full object-cover"
+                          muted
+                          autoPlay
+                          loop
+                          playsInline
+                          preload="metadata"
+                        />
                         <motion.div
-                          whileHover={{ scale: 1.2 }}
-                          whileTap={{ scale: 0.9 }}
+                          className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300"
+                        />
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
-                          <Play className="h-12 w-12 text-white" />
+                          <span className="text-white text-sm font-semibold tracking-wide bg-black/60 px-3 py-1 rounded-full">
+                            View
+                          </span>
                         </motion.div>
-                      </motion.div>
-                      <motion.div 
-                        className="absolute bottom-4 left-4 right-4 text-white"
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                      >
-                        <h4 className="font-semibold text-sm mb-2 line-clamp-2">{reel.title}</h4>
-                        <div className="flex items-center space-x-4 text-xs">
-                          <span>{reel.likes} likes</span>
-                          <span>{reel.comments} comments</span>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </CardContent>
-                </Card>
+                        <span className="sr-only">{reel.title}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </a>
               </motion.div>
             ))}
           </motion.div>

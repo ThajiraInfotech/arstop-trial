@@ -48,7 +48,7 @@ const Categories = () => {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {categoriesWithCounts.map((category) => (
-            <Link key={category.id} to={`/categories/${category.slug}`}>
+            <Link key={category.id} to={`/categories/${category.slug}/collections`}>
               <Card className="h-96 bg-white border-0 shadow-md overflow-hidden group hover:shadow-lg transition-all duration-500 transform hover:-translate-y-2 rounded-xl">
                 <CardContent className="p-0 h-full relative">
                   <div className="h-3/4 overflow-hidden relative">

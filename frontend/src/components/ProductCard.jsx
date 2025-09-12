@@ -196,7 +196,14 @@ const ProductCard = ({ product, index = 0 }) => {
 
           {/* Product Info */}
           <div className="p-6">
-            <motion.h3 
+            {product.collection && (
+              <div className="mb-2">
+                <span className="inline-block bg-indigo-50 text-indigo-700 text-xs font-medium px-2.5 py-1 rounded-full max-w-full truncate">
+                  {product.collection}
+                </span>
+              </div>
+            )}
+            <motion.h3
               className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-amber-600 transition-colors duration-200"
               whileHover={{ x: 2 }}
               transition={{ duration: 0.2 }}

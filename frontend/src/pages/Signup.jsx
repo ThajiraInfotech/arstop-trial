@@ -420,7 +420,7 @@ const Signup = () => {
         </div>
 
         {/* Right Side - Image Background */}
-        <div className="hidden lg:flex flex-1 bg-cover bg-center relative" style={{ backgroundImage: 'url(/signupimg.PNG)' }}>
+        <div className="hidden lg:flex flex-1 bg-cover bg-center relative" style={{ backgroundImage: 'url(/homepage/mainpic.heic)' }}>
             <div className="absolute inset-0 bg-black/10"></div>
                   
                   {/* Centered text content */}

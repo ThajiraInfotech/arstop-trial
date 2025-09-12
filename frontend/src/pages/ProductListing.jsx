@@ -9,12 +9,13 @@ import ProductCard from '../components/ProductCard';
 import { products, categories } from '../data/mock';
 
 const ProductListing = () => {
-  const { category } = useParams();
+  const { category, collection } = useParams();
   const [searchParams] = useSearchParams();
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('featured');
   const [priceRange, setPriceRange] = useState('all');
   const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCollections, setSelectedCollections] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   
@@ -30,9 +31,27 @@ const ProductListing = () => {
       filtered = filtered.filter(product => product.category === category);
     }
 
+    // Filter by collection (from URL)
+    if (collection) {
+      // Convert slug back to collection name
+      const collectionName = categories
+        .find(cat => cat.slug === category)
+        ?.collections.find(col =>
+          col.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === collection
+        );
+      if (collectionName) {
+        filtered = filtered.filter(product => product.collection === collectionName);
+      }
+    }
+
     // Filter by selected categories (from filter sidebar)
     if (selectedCategories.length > 0) {
       filtered = filtered.filter(product => selectedCategories.includes(product.category));
+    }
+
+    // Filter by selected collections (from filter sidebar)
+    if (selectedCollections.length > 0) {
+      filtered = filtered.filter(product => selectedCollections.includes(product.collection));
     }
 
     // Filter by search query
@@ -76,7 +95,7 @@ const ProductListing = () => {
     }
 
     return filtered;
-  }, [category, searchQuery, priceRange, sortBy, selectedCategories]);
+  }, [category, collection, searchQuery, priceRange, sortBy, selectedCategories, selectedCollections]);
 
   // Pagination
   const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
@@ -85,19 +104,56 @@ const ProductListing = () => {
 
   const categoryInfo = category ? categories.find(cat => cat.slug === category) : null;
 
+  // Get collection name from slug
+  const getCollectionName = (collectionSlug) => {
+    if (!categoryInfo || !collectionSlug) return null;
+    return categoryInfo.collections.find(col =>
+      col.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') === collectionSlug
+    );
+  };
+
+  const collectionName = collection ? getCollectionName(collection) : null;
+
+  // Build available collections based on current context
+  const availableCollections = useMemo(() => {
+    if (category) {
+      return categories.find(cat => cat.slug === category)?.collections || [];
+    }
+    if (selectedCategories.length > 0) {
+      const set = new Set();
+      selectedCategories.forEach(slug => {
+        const cat = categories.find(c => c.slug === slug);
+        cat?.collections.forEach(col => set.add(col));
+      });
+      return Array.from(set);
+    }
+    const set = new Set();
+    categories.forEach(cat => cat.collections.forEach(col => set.add(col)));
+    return Array.from(set);
+  }, [category, selectedCategories]);
+
+  const countProductsForCollection = (colName) => {
+    return products.filter(p => {
+      const matchCollection = p.collection === colName;
+      const matchCategory = category ? p.category === category : (selectedCategories.length > 0 ? selectedCategories.includes(p.category) : true);
+      return matchCollection && matchCategory;
+    }).length;
+  };
+
   // Clear all filters
   const clearAllFilters = () => {
     setSelectedCategories([]);
+    setSelectedCollections([]);
     setPriceRange('all');
     setSortBy('featured');
     setCurrentPage(1);
   };
 
   // Check if any filters are applied
-  const hasActiveFilters = selectedCategories.length > 0 || priceRange !== 'all';
+  const hasActiveFilters = selectedCategories.length > 0 || selectedCollections.length > 0 || priceRange !== 'all';
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-8">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
@@ -108,7 +164,13 @@ const ProductListing = () => {
               <>
                 <Link to="/categories" className="hover:text-indigo-600 transition-colors">Categories</Link>
                 <span>/</span>
-                <span className="text-gray-900 font-medium">{categoryInfo?.name}</span>
+                <Link to={`/categories/${category}/collections`} className="hover:text-indigo-600 transition-colors">{categoryInfo?.name}</Link>
+                {collection && collectionName ? (
+                  <>
+                    <span>/</span>
+                    <span className="text-gray-900 font-medium">{collectionName}</span>
+                  </>
+                ) : null}
               </>
             ) : (
               <span className="text-gray-900 font-medium">Products</span>
@@ -118,13 +180,14 @@ const ProductListing = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                {searchQuery ? `Search Results for "${searchQuery}"` : 
-                 categoryInfo ? categoryInfo.name : 'All Products'}
+                {searchQuery ? `Search Results for "${searchQuery}"` :
+                  collectionName ? collectionName :
+                  categoryInfo ? categoryInfo.name : 'All Products'}
               </h1>
               <p className="text-gray-600">
                 {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
                 {hasActiveFilters && (
-                  <button 
+                  <button
                     onClick={clearAllFilters}
                     className="ml-3 text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center"
                   >
@@ -272,6 +335,59 @@ const ProductListing = () => {
                     className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
                   >
                     Clear Categories
+                  </Button>
+                )}
+              </div>
+
+              {/* Collections Filter */}
+              <div className="space-y-4 border-t border-gray-200 pt-6">
+                <h4 className="font-medium text-gray-900">Collections</h4>
+                <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                  {availableCollections.map((col) => (
+                    <label key={col} className="flex items-center space-x-3 cursor-pointer group">
+                      <div className="relative">
+                        <input
+                          type="checkbox"
+                          checked={selectedCollections.includes(col)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedCollections([...selectedCollections, col]);
+                            } else {
+                              setSelectedCollections(selectedCollections.filter(c => c !== col));
+                            }
+                            setCurrentPage(1);
+                          }}
+                          className="sr-only"
+                        />
+                        <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors
+                          ${selectedCollections.includes(col)
+                            ? 'bg-indigo-600 border-indigo-600'
+                            : 'border-gray-300 group-hover:border-indigo-400'}`}>
+                          {selectedCollections.includes(col) && (
+                            <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-sm text-gray-700 group-hover:text-indigo-600 transition-colors flex-1">{col}</span>
+                      <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                        {countProductsForCollection(col)}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+                {selectedCollections.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedCollections([]);
+                      setCurrentPage(1);
+                    }}
+                    className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                  >
+                    Clear Collections
                   </Button>
                 )}
               </div>
@@ -482,6 +598,59 @@ const ProductListing = () => {
                   </div>
                 </div>
 
+                {/* Collections Filter (Mobile) */}
+                <div className="space-y-4 border-t border-gray-200 pt-6">
+                  <h4 className="font-medium text-gray-900">Collections</h4>
+                  <div className="space-y-3 max-h-48 overflow-y-auto pr-2">
+                    {availableCollections.map((col) => (
+                      <label key={col} className="flex items-center space-x-3 cursor-pointer group">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            checked={selectedCollections.includes(col)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedCollections([...selectedCollections, col]);
+                              } else {
+                                setSelectedCollections(selectedCollections.filter(c => c !== col));
+                              }
+                              setCurrentPage(1);
+                            }}
+                            className="sr-only"
+                          />
+                          <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors
+                            ${selectedCollections.includes(col)
+                              ? 'bg-indigo-600 border-indigo-600'
+                              : 'border-gray-300 group-hover:border-indigo-400'}`}>
+                            {selectedCollections.includes(col) && (
+                              <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
+                        <span className="text-sm text-gray-700 group-hover:text-indigo-600 transition-colors flex-1">{col}</span>
+                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                          {countProductsForCollection(col)}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {selectedCollections.length > 0 && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedCollections([]);
+                        setCurrentPage(1);
+                      }}
+                      className="w-full mt-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                    >
+                      Clear Collections
+                    </Button>
+                  )}
+                </div>
+
                 <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4">
                   <div className="flex space-x-3">
                     <Button 
@@ -489,6 +658,7 @@ const ProductListing = () => {
                       className="flex-1 border-gray-300"
                       onClick={() => {
                         setSelectedCategories([]);
+                        setSelectedCollections([]);
                         setPriceRange('all');
                       }}
                     >
