@@ -76,6 +76,12 @@ const Admin = () => {
     imageUrl: "",
     inStock: true,
     featured: false,
+    hasVariants: false,
+    variants: [
+      { name: "", dimensions: "", price: "" }
+    ],
+    colors: [],
+    colorInput: "",
   });
 
   // Optional file upload -> Data URL preview
@@ -97,6 +103,12 @@ const Admin = () => {
       imageUrl: "",
       inStock: true,
       featured: false,
+      hasVariants: false,
+      variants: [
+        { name: "", dimensions: "", price: "" }
+      ],
+      colors: [],
+      colorInput: "",
     });
     setImagePreview("");
   };
@@ -137,9 +149,46 @@ const Admin = () => {
       return;
     }
 
-    const price = numberOr(form.price, NaN);
-    if (!Number.isFinite(price) || price < 0) {
-      toast({ title: "Invalid price", description: "Enter a valid non-negative price (₹)." });
+    const hasVariants = !!form.hasVariants;
+  
+    // Build variants if enabled
+    let variants = [];
+    if (hasVariants) {
+      variants = (form.variants || [])
+        .map((v, idx) => ({
+          name: String(v.name || "").trim() || `Variant ${idx + 1}`,
+          value: slugify(`${v.name || "variant"}-${v.dimensions || idx + 1}`),
+          price: numberOr(v.price, NaN),
+          dimensions: String(v.dimensions || "").trim(),
+        }))
+        .filter(v => Number.isFinite(v.price) && v.price >= 0);
+  
+      if (variants.length === 0) {
+        toast({
+          title: "Add at least one valid variant",
+          description: "Enter size/dimensions and a valid price for variants."
+        });
+        return;
+      }
+  
+      // Add preformatted label for storefront UI
+      variants = variants.map(v => ({
+        ...v,
+        label: `${v.name}${v.dimensions ? `: ${v.dimensions}` : ''} - ${v.price}`
+      }));
+    }
+  
+    // Determine base price: use explicit price if valid; otherwise first variant price
+    const parsedBasePrice = numberOr(form.price, NaN);
+    const basePrice = Number.isFinite(parsedBasePrice) && parsedBasePrice >= 0
+      ? parsedBasePrice
+      : (hasVariants ? variants[0].price : NaN);
+  
+    if (!Number.isFinite(basePrice)) {
+      toast({
+        title: "Invalid price",
+        description: "Enter a valid price or add at least one valid variant."
+      });
       return;
     }
 
@@ -154,10 +203,10 @@ const Admin = () => {
       name,
       category: form.category,
       collection: collectionName,
-      price,
+      price: basePrice,
       images: [primaryImage],
-      variants: [],
-      colors: [],
+      variants: hasVariants ? variants : [],
+      colors: (form.colors || []).map(c => String(c).trim()).filter(Boolean),
       description: "",
       features: [],
       inStock: !!form.inStock,
@@ -348,13 +397,154 @@ const Admin = () => {
 
                   {/* Price */}
                   <div>
-                    <label className="block text-sm text-gray-700 mb-1">Price (₹)</label>
+                    <label className="block text-sm text-gray-700 mb-1">Price (₹){form.hasVariants ? " (used as base if provided)" : ""}</label>
                     <input
                       value={form.price}
                       onChange={(e) => setForm({ ...form, price: e.target.value })}
                       className="w-full border-gray-300 rounded-md"
                       placeholder="8000"
+                      disabled={false}
                     />
+                    <div className="mt-2">
+                      <label className="inline-flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={!!form.hasVariants}
+                          onChange={(e) => setForm({ ...form, hasVariants: e.target.checked })}
+                        />
+                        <span className="text-sm text-gray-700">Use size/price variants</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Variants Editor */}
+                  {form.hasVariants && (
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm text-gray-700 mb-2">Variants (Size • Dimensions • Price)</label>
+                      <div className="space-y-3">
+                        {form.variants.map((v, idx) => (
+                          <div key={idx} className="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center">
+                            <input
+                              value={v.name}
+                              onChange={(e) => {
+                                const next = [...form.variants];
+                                next[idx] = { ...next[idx], name: e.target.value };
+                                setForm({ ...form, variants: next });
+                              }}
+                              className="sm:col-span-3 border-gray-300 rounded-md"
+                              placeholder="Small"
+                            />
+                            <input
+                              value={v.dimensions}
+                              onChange={(e) => {
+                                const next = [...form.variants];
+                                next[idx] = { ...next[idx], dimensions: e.target.value };
+                                setForm({ ...form, variants: next });
+                              }}
+                              className="sm:col-span-5 border-gray-300 rounded-md"
+                              placeholder="6 inch or 12 x 18 inch"
+                            />
+                            <input
+                              value={v.price}
+                              onChange={(e) => {
+                                const next = [...form.variants];
+                                next[idx] = { ...next[idx], price: e.target.value };
+                                setForm({ ...form, variants: next });
+                              }}
+                              className="sm:col-span-3 border-gray-300 rounded-md"
+                              placeholder="2000"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const next = [...form.variants];
+                                next.splice(idx, 1);
+                                setForm({ ...form, variants: next.length ? next : [{ name: "", dimensions: "", price: "" }] });
+                              }}
+                              className="sm:col-span-1 text-red-600 text-sm hover:underline"
+                            >
+                              Remove
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center justify-between mt-3">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                          onClick={() => setForm({ ...form, variants: [...(form.variants || []), { name: "", dimensions: "", price: "" }] })}
+                        >
+                          + Add Variant
+                        </Button>
+                        <div className="text-xs text-gray-500">
+                          Example labels: "Small: 6 inch - 2000", "Medium: 18 x 24 inch - 7000"
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Colors */}
+                  <div className="sm:col-span-2">
+                    <label className="block text-sm text-gray-700 mb-1">Colors</label>
+                    <div className="flex gap-2">
+                      <input
+                        value={form.colorInput}
+                        onChange={(e) => setForm({ ...form, colorInput: e.target.value })}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            const v = (form.colorInput || '').trim();
+                            if (!v) return;
+                            const next = Array.from(new Set([...(form.colors || []), v]));
+                            setForm({ ...form, colors: next, colorInput: "" });
+                            e.preventDefault();
+                          }
+                        }}
+                        className="flex-1 border-gray-300 rounded-md"
+                        placeholder="e.g. Black, Gold or #000000"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="border-gray-300 text-gray-700 hover:bg-gray-50"
+                        onClick={() => {
+                          const v = (form.colorInput || '').trim();
+                          if (!v) return;
+                          const next = Array.from(new Set([...(form.colors || []), v]));
+                          setForm({ ...form, colors: next, colorInput: "" });
+                        }}
+                      >
+                        Add
+                      </Button>
+                    </div>
+                    {form.colors?.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {form.colors.map((c, idx) => (
+                          <span
+                            key={`${c}-${idx}`}
+                            className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border text-sm text-gray-800 bg-white"
+                          >
+                            <span
+                              className="w-3 h-3 rounded-full border"
+                              style={{ backgroundColor: /^#([0-9a-f]{3}){1,2}$/i.test(String(c)) ? c : undefined }}
+                              title={c}
+                            />
+                            {c}
+                            <button
+                              type="button"
+                              className="ml-1 text-red-600 hover:underline"
+                              onClick={() => {
+                                const next = [...(form.colors || [])];
+                                next.splice(idx, 1);
+                                setForm({ ...form, colors: next });
+                              }}
+                            >
+                              Remove
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Stock / Featured */}

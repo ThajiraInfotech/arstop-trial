@@ -110,8 +110,11 @@ const Cart = () => {
                       </Link>
                       
                       <div className="mt-2 space-y-1">
-                        {item.variant && (
-                          <p className="text-sm text-gray-600">Size: {item.variant}</p>
+                        {(item.variantName || item.variant) && (
+                          <p className="text-sm text-gray-600">
+                            Size: {item.variantName || item.variant}
+                            {item.variantDimensions ? ` — ${item.variantDimensions}` : ''}
+                          </p>
                         )}
                         {item.color && (
                           <p className="text-sm text-gray-600">Color: {item.color}</p>

@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs'
 import { Badge } from '../components/ui/badge';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
+import { Label } from '../components/ui/label';
 import { products, reviews, getCartItems, saveCartItems, getWishlistItems, saveWishlistItems } from '../data/mock';
 import { useToast } from '../hooks/use-toast';
 
@@ -62,6 +64,8 @@ const ProductDetail = () => {
         price: currentPrice,
         image: product.images[0],
         variant: selectedVariant,
+        variantName: selectedVariantData?.name || '',
+        variantDimensions: selectedVariantData?.dimensions || '',
         color: selectedColor,
         quantity: quantity
       });
@@ -244,7 +248,7 @@ const ProductDetail = () => {
               </div>
 
               {/* Price */}
-              <div className="flex items-center space-x-4 mb-6">
+              <div className="flex items-center space-x-4 mb-3">
                 <span className="text-3xl font-bold text-gray-900">
                   Rs. {currentPrice.toLocaleString()}
                 </span>
@@ -259,24 +263,48 @@ const ProductDetail = () => {
                   </Badge>
                 )}
               </div>
+              {/* Selected size display (no price here) */}
+              {selectedVariantData && (
+                <div className="text-sm text-gray-600 mb-6">
+                  Selected size:{" "}
+                  <span className="font-medium text-gray-900">{selectedVariantData.name}</span>
+                  {selectedVariantData.dimensions ? (
+                    <span> — {selectedVariantData.dimensions}</span>
+                  ) : null}
+                </div>
+              )}
             </div>
 
             {/* Variants */}
             {product.variants && product.variants.length > 0 && (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Size</h3>
-                <div className="flex flex-wrap gap-3">
-                  {product.variants.map((variant) => (
-                    <Button
-                      key={variant.value}
-                      variant={selectedVariant === variant.value ? "default" : "outline"}
-                      onClick={() => setSelectedVariant(variant.value)}
-                      className="min-w-[100px]"
-                    >
-                      {variant.name}
-                    </Button>
-                  ))}
-                </div>
+                <RadioGroup
+                  value={selectedVariant}
+                  onValueChange={(v) => setSelectedVariant(v)}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+                >
+                  {product.variants.map((variant) => {
+                    const id = `size-${variant.value}`;
+                    return (
+                      <Label
+                        key={variant.value}
+                        htmlFor={id}
+                        className={`flex items-center justify-between border rounded-lg p-4 cursor-pointer transition-colors ${
+                          selectedVariant === variant.value ? 'border-black bg-gray-50' : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <RadioGroupItem id={id} value={variant.value} />
+                          <div className="font-medium text-gray-900">{variant.name}{variant.dimensions ? `: ${variant.dimensions}` : ''}</div>
+                        </div>
+                        {selectedVariant === variant.value && (
+                          <span className="text-xs text-green-600 font-medium">Selected</span>
+                        )}
+                      </Label>
+                    );
+                  })}
+                </RadioGroup>
               </div>
             )}
 

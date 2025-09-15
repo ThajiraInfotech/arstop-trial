@@ -85,6 +85,23 @@ export const categories = [
         "https://picsum.photos/300/200?random=19",
     },
   },
+  {
+    id: 5,
+    name: "Frames",
+    slug: "frames",
+    image: "https://picsum.photos/seed/frames/400/300",
+    productCount: 0,
+    collections: [
+      "Round Frames",
+      "Rectangle Frames",
+      "Square Frames"
+    ],
+    collectionImages: {
+      "Round Frames": "https://picsum.photos/seed/round-frames/300/200",
+      "Rectangle Frames": "https://picsum.photos/seed/rect-frames/300/200",
+      "Square Frames": "https://picsum.photos/seed/sq-frames/300/200"
+    }
+  }
 ];
 
 export const products = [
@@ -103,9 +120,9 @@ export const products = [
       "https://picsum.photos/800/600?random=22"
     ],
     variants: [
-      { name: "Small", value: "small", price: 6000 },
-      { name: "Medium", value: "medium", price: 8000 },
-      { name: "Large", value: "large", price: 12000 }
+      { name: "Small", value: "small", price: 6000, dimensions: "12 x 18 inch" },
+      { name: "Medium", value: "medium", price: 8000, dimensions: "18 x 24 inch" },
+      { name: "Large", value: "large", price: 12000, dimensions: "24 x 36 inch" }
     ],
     colors: ["Gold", "Silver", "Black"],
     description: "Beautiful Ayatul Kursi Islamic wall art made from premium stainless steel",
@@ -127,8 +144,9 @@ export const products = [
       "https://picsum.photos/800/600?random=24"
     ],
     variants: [
-      { name: "Medium", value: "medium", price: 7000 },
-      { name: "Large", value: "large", price: 10000 }
+      { name: "Small", value: "small", price: 5000, dimensions: "12 x 18 inch" },
+      { name: "Medium", value: "medium", price: 7000, dimensions: "18 x 24 inch" },
+      { name: "Large", value: "large", price: 10000, dimensions: "24 x 36 inch" }
     ],
     colors: ["Blue", "Gold", "White"],
     description: "Elegant 99 Names of Allah wall art in premium acrylic material",
@@ -150,8 +168,9 @@ export const products = [
       "https://picsum.photos/800/600?random=26"
     ],
     variants: [
-      { name: "Small", value: "small", price: 5200 },
-      { name: "Large", value: "large", price: 8200 }
+      { name: "Small", value: "small", price: 5200, dimensions: "16 x 20 inch" },
+      { name: "Medium", value: "medium", price: 6500, dimensions: "20 x 24 inch" },
+      { name: "Large", value: "large", price: 8200, dimensions: "24 x 30 inch" }
     ],
     colors: ["Black", "Gold"],
     description: "Premium canvas featuring the 4 Quls in Arabic calligraphy",
@@ -173,7 +192,9 @@ export const products = [
       "https://picsum.photos/800/600?random=28"
     ],
     variants: [
-      { name: "Standard", value: "std", price: 2500 }
+      { name: "Small", value: "small", price: 2000, dimensions: "6 x 8 inch" },
+      { name: "Medium", value: "medium", price: 2500, dimensions: "8 x 10 inch" },
+      { name: "Large", value: "large", price: 3200, dimensions: "10 x 12 inch" }
     ],
     colors: ["Wood", "Black"],
     description: "Handcrafted wooden Bismillah nameplate for homes",
@@ -195,8 +216,9 @@ export const products = [
       "https://picsum.photos/800/600?random=30"
     ],
     variants: [
-      { name: "A4", value: "a4", price: 2800 },
-      { name: "A3", value: "a3", price: 4500 }
+      { name: "Small", value: "small", price: 2200, dimensions: "8 x 10 inch" },
+      { name: "Medium", value: "medium", price: 2800, dimensions: "11 x 14 inch" },
+      { name: "Large", value: "large", price: 4500, dimensions: "16 x 20 inch" }
     ],
     colors: ["Black", "White"],
     description: "Printed frame with beautiful daily dua",
@@ -218,8 +240,9 @@ export const products = [
       "https://picsum.photos/800/600?random=32"
     ],
     variants: [
-      { name: "Wood", value: "wood", price: 3500 },
-      { name: "Metal", value: "metal", price: 5000 }
+      { name: "Small", value: "small", price: 3000, dimensions: "8 x 10 inch" },
+      { name: "Medium", value: "medium", price: 3500, dimensions: "10 x 12 inch" },
+      { name: "Large", value: "large", price: 5000, dimensions: "12 x 15 inch" }
     ],
     colors: ["Brown", "Black"],
     description: "Elegant Quran stand with complimentary tasbih beads",
@@ -242,7 +265,11 @@ export const products = [
       "https://picsum.photos/800/600?random=33",
       "https://picsum.photos/800/600?random=34"
     ],
-    variants: [{ name: "Standard", value: "std", price: 2800 }],
+    variants: [
+      { name: "Small", value: "small", price: 2200, dimensions: "6 x 8 inch" },
+      { name: "Medium", value: "medium", price: 2800, dimensions: "8 x 10 inch" },
+      { name: "Large", value: "large", price: 3500, dimensions: "10 x 12 inch" }
+    ],
     colors: ["Blue", "Gold"],
     description: "Durable resin nameplate with gold accents",
     features: ["Weatherproof", "UV resistant", "Customizable"],
@@ -263,8 +290,9 @@ export const products = [
       "https://picsum.photos/800/600?random=36"
     ],
     variants: [
-      { name: "Medium", value: "medium", price: 6000 },
-      { name: "Large", value: "large", price: 8500 }
+      { name: "Small", value: "small", price: 4500, dimensions: "12 x 16 inch" },
+      { name: "Medium", value: "medium", price: 6000, dimensions: "16 x 20 inch" },
+      { name: "Large", value: "large", price: 8500, dimensions: "20 x 24 inch" }
     ],
     colors: ["Purple", "Blue", "Black"],
     description: "Stunning geode-inspired wall art for modern homes",
@@ -286,8 +314,9 @@ export const products = [
       "https://picsum.photos/800/600?random=38"
     ],
     variants: [
-      { name: "12 inch", value: "12", price: 1500 },
-      { name: "18 inch", value: "18", price: 2000 }
+      { name: "Small", value: "small", price: 1200, dimensions: "10 inch diameter" },
+      { name: "Medium", value: "medium", price: 1500, dimensions: "12 inch diameter" },
+      { name: "Large", value: "large", price: 2000, dimensions: "18 inch diameter" }
     ],
     colors: ["Black", "White"],
     description: "Modern wall clock with silent movement",
@@ -308,7 +337,11 @@ export const products = [
       "https://picsum.photos/800/600?random=39",
       "https://picsum.photos/800/600?random=40"
     ],
-    variants: [{ name: "Standard", value: "std", price: 3200 }],
+    variants: [
+      { name: "Small", value: "small", price: 2500, dimensions: "8 x 10 inch" },
+      { name: "Medium", value: "medium", price: 3200, dimensions: "11 x 14 inch" },
+      { name: "Large", value: "large", price: 4200, dimensions: "16 x 20 inch" }
+    ],
     colors: ["Brown", "White"],
     description: "Beautiful frame to preserve precious family memories",
     features: ["Customizable", "Glass cover", "Premium wood"],
@@ -328,7 +361,11 @@ export const products = [
       "https://picsum.photos/800/600?random=41",
       "https://picsum.photos/800/600?random=42"
     ],
-    variants: [{ name: "A3", value: "a3", price: 2200 }],
+    variants: [
+      { name: "Small", value: "small", price: 1800, dimensions: "11 x 14 inch" },
+      { name: "Medium", value: "medium", price: 2200, dimensions: "16 x 20 inch" },
+      { name: "Large", value: "large", price: 3000, dimensions: "20 x 24 inch" }
+    ],
     colors: ["Black", "White"],
     description: "Modern typography wall art with inspirational quotes",
     features: ["High quality print", "Matte finish", "Ready to hang"],
@@ -350,7 +387,11 @@ export const products = [
       "https://picsum.photos/800/600?random=43",
       "https://picsum.photos/800/600?random=44"
     ],
-    variants: [{ name: "Standard", value: "std", price: 4200 }],
+    variants: [
+      { name: "Small", value: "small", price: 3500, dimensions: "8 x 6 x 4 inch" },
+      { name: "Medium", value: "medium", price: 4200, dimensions: "10 x 8 x 5 inch" },
+      { name: "Large", value: "large", price: 5500, dimensions: "12 x 10 x 6 inch" }
+    ],
     colors: ["White", "Gold"],
     description: "Perfect wedding gift with elegant packaging",
     features: ["Gift-ready", "Premium quality", "Customizable"],
@@ -370,7 +411,11 @@ export const products = [
       "https://picsum.photos/800/600?random=45",
       "https://picsum.photos/800/600?random=46"
     ],
-    variants: [{ name: "Standard", value: "std", price: 3600 }],
+    variants: [
+      { name: "Small", value: "small", price: 2800, dimensions: "8 x 6 x 4 inch" },
+      { name: "Medium", value: "medium", price: 3600, dimensions: "10 x 8 x 5 inch" },
+      { name: "Large", value: "large", price: 4800, dimensions: "12 x 10 x 6 inch" }
+    ],
     colors: ["Mixed"],
     description: "Thoughtful housewarming gift basket",
     features: ["Custom items", "Decorative basket", "Ready to gift"],
@@ -390,7 +435,11 @@ export const products = [
       "https://picsum.photos/800/600?random=47",
       "https://picsum.photos/800/600?random=48"
     ],
-    variants: [{ name: "Standard", value: "std", price: 4800 }],
+    variants: [
+      { name: "Small", value: "small", price: 3800, dimensions: "8 x 6 x 4 inch" },
+      { name: "Medium", value: "medium", price: 4800, dimensions: "10 x 8 x 5 inch" },
+      { name: "Large", value: "large", price: 6200, dimensions: "12 x 10 x 6 inch" }
+    ],
     colors: ["Black", "Silver"],
     description: "Premium gift set for corporate clients",
     features: ["Custom branding", "Premium packaging", "High quality"],
@@ -410,7 +459,11 @@ export const products = [
       "https://picsum.photos/800/600?random=49",
       "https://picsum.photos/800/600?random=50"
     ],
-    variants: [{ name: "Set of 3", value: "set3", price: 800 }],
+    variants: [
+      { name: "Small", value: "small", price: 600, dimensions: "Set of 2" },
+      { name: "Medium", value: "medium", price: 800, dimensions: "Set of 3" },
+      { name: "Large", value: "large", price: 1200, dimensions: "Set of 5" }
+    ],
     colors: ["Mixed"],
     description: "Budget-friendly mini gift items set",
     features: ["Affordable", "Useful items", "Compact size"],
@@ -432,7 +485,11 @@ export const products = [
       "https://picsum.photos/800/600?random=51",
       "https://picsum.photos/800/600?random=52"
     ],
-    variants: [{ name: "Standard", value: "std", price: 2700 }],
+    variants: [
+      { name: "Small", value: "small", price: 2000, dimensions: "12 x 12 inch" },
+      { name: "Medium", value: "medium", price: 2700, dimensions: "18 x 18 inch" },
+      { name: "Large", value: "large", price: 3800, dimensions: "24 x 24 inch" }
+    ],
     colors: ["Transparent", "Black"],
     description: "Durable acrylic wall cutout design",
     features: ["Laser cut", "Durable material", "Smooth finish"],
@@ -452,7 +509,11 @@ export const products = [
       "https://picsum.photos/800/600?random=53",
       "https://picsum.photos/800/600?random=54"
     ],
-    variants: [{ name: "Standard", value: "std", price: 6200 }],
+    variants: [
+      { name: "Small", value: "small", price: 4800, dimensions: "12 x 18 inch" },
+      { name: "Medium", value: "medium", price: 6200, dimensions: "18 x 24 inch" },
+      { name: "Large", value: "large", price: 8200, dimensions: "24 x 36 inch" }
+    ],
     colors: ["Silver", "Black"],
     description: "Premium steel artwork with Islamic calligraphy",
     features: ["Rust-proof", "Elegant design", "Laser cut"],
@@ -472,7 +533,11 @@ export const products = [
       "https://picsum.photos/800/600?random=55",
       "https://picsum.photos/800/600?random=56"
     ],
-    variants: [{ name: "Set", value: "set", price: 1200 }],
+    variants: [
+      { name: "Small", value: "small", price: 800, dimensions: "Set of 3 (6 x 6 inch each)" },
+      { name: "Medium", value: "medium", price: 1200, dimensions: "Set of 5 (8 x 8 inch each)" },
+      { name: "Large", value: "large", price: 1800, dimensions: "Set of 8 (10 x 10 inch each)" }
+    ],
     colors: ["Black", "White"],
     description: "Vinyl wall stickers for decoration",
     features: ["Easy peel", "Durable", "Removable"],
@@ -492,10 +557,83 @@ export const products = [
       "https://picsum.photos/800/600?random=57",
       "https://picsum.photos/800/600?random=58"
     ],
-    variants: [{ name: "Standard", value: "std", price: 5000 }],
+    variants: [
+      { name: "Small", value: "small", price: 3800, dimensions: "12 x 12 inch" },
+      { name: "Medium", value: "medium", price: 5000, dimensions: "18 x 18 inch" },
+      { name: "Large", value: "large", price: 6800, dimensions: "24 x 24 inch" }
+    ],
     colors: ["Black", "White"],
     description: "Custom Arabic calligraphy shapes for interior/exterior",
     features: ["Customizable design", "Durable material", "Fast delivery"],
+    inStock: true,
+    featured: false
+  },
+  {
+    id: 23,
+    name: "Round Frames",
+    category: "frames",
+    collection: "Round Frames",
+    price: 2000,
+    rating: 4.5,
+    reviewCount: 0,
+    images: [
+      "https://picsum.photos/seed/round-frames-1/800/600",
+      "https://picsum.photos/seed/round-frames-2/800/600"
+    ],
+    variants: [
+      { name: "Small", value: "small", price: 2000, dimensions: "6 inch", label: "Small: 6 inch - 2000" },
+      { name: "Medium", value: "medium", price: 4500, dimensions: "12 inch", label: "Medium: 12 inch - 4500" },
+      { name: "Large", value: "large", price: 8000, dimensions: "24 inch", label: "Large: 24 inch - 8000" }
+    ],
+    colors: ["Black", "White"],
+    description: "Premium round frames in multiple sizes.",
+    features: ["High quality finish", "Wall mount ready", "Multiple size options"],
+    inStock: true,
+    featured: false
+  },
+  {
+    id: 24,
+    name: "Rectangle Frames",
+    category: "frames",
+    collection: "Rectangle Frames",
+    price: 5000,
+    rating: 4.5,
+    reviewCount: 0,
+    images: [
+      "https://picsum.photos/seed/rect-frames-1/800/600",
+      "https://picsum.photos/seed/rect-frames-2/800/600"
+    ],
+    variants: [
+      { name: "Small", value: "small", price: 5000, dimensions: "12 x 18 inch", label: "Small: 12 x 18 inch - 5000" },
+      { name: "Medium", value: "medium", price: 7000, dimensions: "18 x 24 inch", label: "Medium: 18 x 24 inch - 7000" },
+      { name: "Large", value: "large", price: 12000, dimensions: "24 x 36 inch", label: "Large: 24 x 36 inch - 12000" }
+    ],
+    colors: ["Black", "White"],
+    description: "Classic rectangle frames suitable for posters and portraits.",
+    features: ["Glass protection", "Sturdy build", "Multiple size options"],
+    inStock: true,
+    featured: true
+  },
+  {
+    id: 25,
+    name: "Square Frames",
+    category: "frames",
+    collection: "Square Frames",
+    price: 5000,
+    rating: 4.5,
+    reviewCount: 0,
+    images: [
+      "https://picsum.photos/seed/square-frames-1/800/600",
+      "https://picsum.photos/seed/square-frames-2/800/600"
+    ],
+    variants: [
+      { name: "Small", value: "small", price: 5000, dimensions: "12 x 12 inch", label: "Small: 12 x 12 inch - 5000" },
+      { name: "Medium", value: "medium", price: 6500, dimensions: "18 x 18 inch", label: "Medium: 18 x 18 inch - 6500" },
+      { name: "Large", value: "large", price: 8000, dimensions: "24 x 24 inch", label: "Large: 24 x 24 inch - 8000" }
+    ],
+    colors: ["Black", "White"],
+    description: "Elegant square frames for a balanced look.",
+    features: ["Ready to hang", "Smooth edges", "Multiple size options"],
     inStock: true,
     featured: false
   }
